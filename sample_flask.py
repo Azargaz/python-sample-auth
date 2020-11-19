@@ -43,12 +43,16 @@ def authorized():
 @APP.route('/graphcall')
 def graphcall():
     """Confirm user authentication by calling Graph and displaying some data."""
-    endpoint = 'me'
+    endpoint = 'me/onlineMeetings'
     headers = {'SdkVersion': 'sample-python-flask',
                'x-client-SKU': 'sample-python-flask',
                'client-request-id': str(uuid.uuid4()),
                'return-client-request-id': 'true'}
-    graphdata = MSGRAPH.get(endpoint, headers=headers).data
+    graphdata = MSGRAPH.post(endpoint, headers=headers, data={
+        'startDateTime':"2021-12-01",
+        'endDateTime':"2021-12-01",
+        'subject':"Test Meeting"
+    }).data
     return flask.render_template('graphcall.html',
                                  graphdata=graphdata,
                                  endpoint=config.RESOURCE + config.API_VERSION + '/' + endpoint,
